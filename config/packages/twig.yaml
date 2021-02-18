@@ -1,0 +1,7 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+#_errors:
+#    resources: '@TwigBundle/Resources/config/routing/error.xml'
+#    prefix: /_error
+#
+

@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div>
+        {{ include('micro-post/raw-post.html.twig', {'post': post}) }}
+
+        {% set isLiked = post.getLikedBy.contains(app.user) %}
+
+        <div>
+
+            <button style="display: {% if not isLiked %} block {% else %} none {% endif %}" id="like">
+                Like
+                <span id="likes_like">{{ post.getLikedBy.count }}</span>
+            </button>
+
+            <button style="display: {% if isLiked %} block {% else %} none {% endif %}" id="unlike">
+                Unlike
+                <span id="likes_unlike">{{ post.getLikedBy.count }}</span>
+            </button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+{{ parent() }}
+
+<script>
+    const likeButton = document.getElementById('like');
+    const unlikeButton = document.getElementById('unlike');
+
+
+
+    addOnClick(likeButton,
+            unlikeButton,
+             document.getElementById('likes_unlike'),
+             '{{ path('likes_like', {'id': post.id}) }}');
+
+    addOnClick(unlikeButton,
+            likeButton,
+             document.getElementById('likes_like'),
+             '{{ path('likes_unlike', {'id': post.id}) }}');
+
+
+
+
+    function switchButtons(button, oppositeButton) {
+        button.disabled = false;
+        button.style.display = 'none';
+        oppositeButton.style.display = 'block';
+    }
+
+    function addOnClick(button, oppositeButton, likeCount, path) {
+        button.addEventListener('click', function(event) {
+            {% if not app.user %}
+                return window.location.replace('{{ path('user_register') }}')
+            {% endif %}
+
+            button.disabled = true;
+
+            fetch(path, {'credentials': 'include'}).then(function (response) {
+                response.json().then(function (json) {
+                    likeCount.innerText = json.count;
+                    switchButtons(button, oppositeButton);
+                })
+            }).catch(function () {
+                switchButtons(button, oppositeButton);
+            })
+
+            event.preventDefault();
+        })
+    }
+</script>
+{% endblock %}

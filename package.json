@@ -1,0 +1,13 @@
+{
+  "name": "symfony0",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "4.0.0",
+    "holderjs": "^2.9.9"
+  },
+  "devDependencies": {
+    "@symfony/webpack-encore": "^1.0.4"
+  }
+}
